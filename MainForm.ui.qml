@@ -16,8 +16,8 @@ Item {
 
     Text {
         id: text2
-        x: 97
-        y: 8
+        x: 120
+        y: 10
         text: wormTank.generation
     }
 
@@ -59,7 +59,7 @@ Item {
     Label {
         id: label1
         x: 254
-        y: 8
+        y: 10
         text: qsTr("Tick")
     }
 
@@ -117,7 +117,7 @@ Item {
         x: 445
         y: 80
         width: 234
-        height: 109
+        height: 114
         title: qsTr("Leader stats")
 
         Text {
@@ -125,7 +125,7 @@ Item {
             x: 6
             y: 6
             text: qsTr("Age")
-            font.pixelSize: 12
+            font.pointSize: 11
         }
 
         Text {
@@ -138,31 +138,31 @@ Item {
 
         Text {
             id: text5
-            x: 4
-            y: 26
+            x: 6
+            y: 29
             width: 72
-            height: 14
+            height: 17
             text: qsTr("Leading for")
         }
 
         Text {
             id: text6
-            x: 85
-            y: 26
+            x: 108
+            y: 29
             text: wormTank.leaderAtTop
         }
 
         Text {
             id: text14
             x: 6
-            y: 46
+            y: 49
             text: qsTr("Ancestors")
         }
 
         ListView {
             id: listView1
             x: 6
-            y: 66
+            y: 69
             width: 214
             height: 16
             orientation: ListView.Horizontal
@@ -183,6 +183,14 @@ Item {
             }
             model: wormTank.history
         }
+
+        Text {
+            id: text18
+            x: 108
+            y: 8
+            text: wormTank.leaderAge
+            font.pointSize: 11
+        }
     }
 
     GroupBox {
@@ -195,14 +203,14 @@ Item {
 
         Text {
             id: text7
-            x: 6
+            x: 10
             y: 13
             text: qsTr("Ticks")
         }
 
         Text {
             id: text8
-            x: 88
+            x: 112
             y: 13
             text: wormTank.lastGenerationTicks
         }
@@ -218,8 +226,8 @@ Item {
 
         Text {
             id: text10
-            x: 88
-            y: 42
+            x: 112
+            y: 40
             text: wormTank.lastGenerationFoodLeft
         }
 
@@ -232,14 +240,14 @@ Item {
 
         Text {
             id: text12
-            x: 88
+            x: 112
             y: 64
             text: wormTank.lastGenerationMaxEnergy
         }
     }
 
     TrendChart {
-        x: 489
+        x: 502
         y: 310
         width: 177
         height: 39
@@ -249,8 +257,8 @@ Item {
 
     Text {
         id: text15
-        x: 445
-        y: 323
+        x: 443
+        y: 321
         text: qsTr("Ticks")
     }
 
@@ -262,7 +270,7 @@ Item {
     }
 
     TrendChart {
-        x: 489
+        x: 502
         y: 358
         width: 177
         height: 39
@@ -272,7 +280,7 @@ Item {
     }
 
     TrendChart {
-        x: 489
+        x: 502
         y: 408
         width: 177
         height: 39

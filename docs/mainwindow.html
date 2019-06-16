@@ -1,0 +1,110 @@
+html>
+<head><title>Worm Tank - Main Window</title></head>
+<body>
+<h1>Worm Tank - Main Window</h1>
+<p>The main window shows the running simulation with and some statistics
+on previous generations.</p>
+<p>The title of this window is changed to show what is currently
+running in the tank.</p>
+<p>The top area contains information on the current run.
+<table>
+  <tr>
+    <td>Generation</td>
+    <td>The current generation being run</td>
+  </tr>
+  <tr>
+    <td>Tick</td>
+    <td>The time in the current generation measured in ticks,
+    where each tick is one move off all the worms.
+    </td>
+  </tr>
+  <tr>
+    <td>Worms Left</td>
+    <td>Number of worm alive in the tank</td>
+  </tr>
+  <tr>
+    <td>Food Left</td>
+    <td>Amount of food left in the tank</td>
+  </tr>
+  <tr>
+    <td>Max energy</td>
+    <td>The maximum energy any one worm has had</td>
+  </tr>
+</table>
+</p>
+<p>Under the information on the current run is the worm tank itself.
+This shows the worms wandering around the tank. The green dots are the
+food they eat and the longer moving coloured lines are the worms.</p>
+<p>The worms grow and shrink in length depending on the amount
+of energy they have.</p>
+<p>To see a key for the colours of the worms use the
+<a href="viewmenu.html#wormlist">View menu, Worm list option</a>.
+</p>
+<p>The section to the right marked <b>Leader stats</b> gives information
+about the worm with the most energy at the end of the generation.
+</p>
+
+<table>
+  <tr>
+    <td>Age</td>
+    <td>The number of generation the leader has been alive.
+        i.e. The leader was in the top ten worms.
+    </td>
+  </tr>
+  <tr>
+    <td>Leading for</td>
+    <td>The number of generations the leader has been at the top
+        at the end of the generation.
+    </td>
+  </tr>
+  <tr>
+    <td>Ancestors</td>
+    <td>This is a list of which worm won each generation,
+        with the last generation on the left.
+    </td>
+  </tr>
+</table>
+
+<p>The section to the right marked <b>Last generation stats</b>
+gives information on the last finished generation.</p>
+
+<table>
+  <tr>
+    <td>Ticks</td>
+    <td>The time the last generation lasted for</td>
+  </tr>
+  <tr>
+    <td>Food Left</td>
+    <td>The amount of food left when the generation finished</td>
+  </tr>
+  <tr>
+    <td>Max energy</td>
+    <td>The maximum energy any one worm has had in the last generation</td>
+  </tr>
+</table>
+
+<p>The three line charts at the bottom summarize the
+history of the previous generations so trends can
+be seen.</p>
+<p>The charts go from the oldest generation
+on the left to the last generation on the right.
+Two generations need to have passed before anything
+is shown.
+</p>
+
+<table>
+  <tr>
+    <td>Ticks</td>
+    <td>The number of ticks the generations took</td>
+  </tr>
+  <tr>
+    <td>Food left</td>
+    <td>The amount of food left at the end of the generations</td>
+  </tr>
+  <tr>
+    <td>Max Energy</td>
+    <td>The maximum energy any one worm has had in the generations</td>
+  </tr>
+</table>
+
+

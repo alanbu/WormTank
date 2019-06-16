@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.2
 Item {
     id: leagueWindow
     visible: true
-    width: 600
+    width: 610
     height: 400
 
     ColumnLayout
@@ -26,7 +26,7 @@ Item {
             TableViewColumn {
                     role: "played"
                     title: "Played"
-                    width: 50
+                    width: 60
                     horizontalAlignment: Text.AlignHCenter
             }
 

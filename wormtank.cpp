@@ -234,10 +234,10 @@ QString WormTank::leagueWinner() const
 void WormTank::startLeague()
 {
     m_mode = LeagueMode;
-    m_survivors = 10;
     clear();
     if (!loadLeague() || leagueWon())
     {
+        m_survivors = 10;
         m_league->newSeason();
         nextLeagueMatch();
     }
@@ -878,11 +878,15 @@ void WormTank::step()
                 }
             } else
             {
-                // Collistions cost an extra unit of energy
+                // Collisions with another worm cost an extra unit of energy
                 worm->useEnergy();
             }
-
-		}
+        } else
+        {
+           // Collisions with the walls cost two extra energy
+            worm->useEnergy();
+            worm->useEnergy();
+        }
 		worm->useEnergy();
         while (worm->getPointToErase(pt))
         {

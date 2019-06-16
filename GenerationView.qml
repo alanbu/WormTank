@@ -5,8 +5,8 @@ import QtQuick.Layouts 1.2
 Item {
     id: generationWindow
     visible: true
-    width: 275
-    height: 240
+    width: 295
+    height: 250
 
     TableView
     {
@@ -20,7 +20,7 @@ Item {
         TableViewColumn {
                 role: "generation"
                 title: "Generation"
-                width: 70
+                width: 90
                 horizontalAlignment: Text.AlignHCenter
         }
 

@@ -30,7 +30,7 @@ by their full name and position.</b>
 <p>The fields are:
 <table>
   <tr>
-    <td>Name</td>
+    <td>Worm Name</td>
     <td>The full name of the worm. For most worm types this is just
         the name of the worm type. But some types (e.g. Mutant) have
         extra information added to the name.
@@ -39,12 +39,14 @@ by their full name and position.</b>
   <tr>
     <td>Position</td>
     <td>The position the worm was in at the end of the previous
-        generation or what type of child it is.
+        generation or what type of child it is. If not in training
+        mode this gives a team name based on the position it was
+        added to the tank, e.g. Leader, Second...
     </td>
   </tr>
   <tr>
     <td>Colour</td>
-    <td>The colour of the worm in the tank,</td>
+    <td>The colour of the worm in the tank</td>
   </tr>
   <tr>
     <td>Left</td>
@@ -84,15 +86,15 @@ game will be.</p>
   </tr>
   <tr>
      <td>For</td>
-     <td>Total of points scored in all games</td>
+     <td>Total scored in all games</td>
   </tr>
   <tr>
      <td>Agnst</td>
-     <td>Total of points scored against this team in all games</td>
+     <td>Total scored against this team in all games</td>
   </tr>
   <tr>
      <td>Diff</td>
-     <td>The difference between poinst scored for and against</td>
+     <td>The difference between scored for and against</td>
   </tr>
   <tr>
      <td>Points</td>
@@ -100,6 +102,8 @@ game will be.</p>
   </tr>
 </table>
 </p>
+<p>Underneath the league table is shown the current match in progress
+and the result of the last match.</p>
 
 <h2 id="history">History</h2>
 
@@ -144,7 +148,7 @@ worm types</p>
 <p>The fields are:
 <table>
   <tr>
-     <td>Name</td>
+     <td>Worm Type</td>
      <td>Name of the worm type</td>
   </tr>
   <tr>
@@ -153,7 +157,6 @@ worm types</p>
   </tr>
 </table>
 </p>
-
 
 </body>
 </html>
