@@ -376,6 +376,7 @@ bool WormTank::loadLatest(QString wormType)
     return fileLoaded;
 }
 
+
 /**
  * @brief load battle in progressm
  * @return true if successful
@@ -757,6 +758,36 @@ bool WormTank::loadWorms(QString wormType, int colour, uint count)
     return fileLoaded;
 }
 
+/**
+ * @brief Read latest generation from disc
+ * @param wormType worm type to load from
+ * @return latest generation or 0 if none or can't be read
+ */
+uint WormTank::latestGeneration(QString wormType)
+{
+    QString loadFileName = latestFileName(wormType);
+    QFile loadFile(loadFileName);
+    uint generation = 0;
+    if (loadFile.exists() && loadFile.open(QIODevice::ReadOnly))
+    {
+        try
+        {
+            QDataStream in(&loadFile);
+            int fileVersion, fileType;
+            in >> fileVersion;
+            in >> fileType;
+            QString name;
+            in >> name; // Skip name
+            in >> generation;
+        } catch(...)
+        {
+            generation = 0;
+        }
+    }
+
+    return generation;
+}
+
 
 void WormTank::setName(QString name)
 {
@@ -884,22 +915,25 @@ void WormTank::step()
     m_tick++;
 
     bool genFinished = false;
-    if (m_wormsLeft <= m_survivors)
+    if (m_survivors > 0)
     {
-        genFinished = true;
-    } else if (m_mode != NormalMode && !died.empty())
-    {
-        // All other types exit the generation when there is only one
-        // type of worm left
-        std::string firstType;
-        genFinished = true;
-        for (auto worm : m_worms)
+        if (m_wormsLeft <= m_survivors)
         {
-            if (firstType.empty()) firstType = worm->name();
-            else if (firstType != worm->name())
+            genFinished = true;
+        } else if (m_mode != NormalMode && !died.empty())
+        {
+            // All other types exit the generation when there is only one
+            // type of worm left
+            std::string firstType;
+            genFinished = true;
+            for (auto worm : m_worms)
             {
-                genFinished = false;
-                break;
+                if (firstType.empty()) firstType = worm->name();
+                else if (firstType != worm->name())
+                {
+                    genFinished = false;
+                    break;
+                }
             }
         }
     }

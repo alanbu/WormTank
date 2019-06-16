@@ -12,7 +12,9 @@ WormTankModelView::WormTankModelView(WormTank &wormTank, QObject *parent) :
     m_wormListView(nullptr),
     m_leagueView(nullptr),
     m_historyView(nullptr),
+    m_generationView(nullptr),
     m_wormList(nullptr),
+    m_generationList(nullptr),
     m_finishedText(""),
     m_finishedTextVisible(false)
 {
@@ -24,6 +26,7 @@ WormTankModelView::~WormTankModelView()
     if (m_wormListView) m_wormListView->destroy();
     delete m_leagueView;
     delete m_historyView;
+    delete m_generationView;
     if (m_wormList)
     {
         for (auto wc : *m_wormList)
@@ -32,6 +35,7 @@ WormTankModelView::~WormTankModelView()
         }
         delete m_wormList;
     }
+    delete m_generationList;
 }
 
 /**
@@ -513,4 +517,40 @@ void WormTankModelView::viewHistory()
         m_historyView->setResizeMode(QQuickView::SizeRootObjectToView);
     }
     m_historyView->show();
+}
+
+/**
+ * @brief View the generation list
+ */
+void WormTankModelView::viewGeneration()
+{
+    if (!m_generationView)
+    {
+        if (m_generationList == nullptr)
+        {
+            m_generationList = new GenList();
+            m_generationList->setup(&m_wormTank);
+            QObject::connect(&m_wormTank, &WormTank::generationChanged, this, &WormTankModelView::updateGenerationList);
+        }
+        m_generationView = new QQuickView();
+        m_generationView->setSource(QUrl("qrc:/GenerationView.qml"));
+        QQmlContext *ctx = m_generationView->rootContext();
+        ctx->setContextProperty("wormTankModelView", this);
+
+        m_generationView->setTitle("WormTank - Generation List");
+        m_generationView->setResizeMode(QQuickView::SizeRootObjectToView);
+    }
+    m_generationView->show();
+}
+
+/**
+ * @brief Update the generation list when running in standard mode
+ * @param generation new generation
+ */
+void WormTankModelView::updateGenerationList(uint generation)
+{
+    if (m_wormTank.mode() == WormTank::NormalMode)
+    {
+        m_generationList->updateGeneration(m_wormTank.name(), generation);
+    }
 }

@@ -24,7 +24,8 @@ SOURCES += main.cpp \
     leaguetable.cpp \
     history.cpp \
     trendchart.cpp \
-    beambrain.cpp
+    beambrain.cpp \
+    genlist.cpp
 
 RESOURCES += qml.qrc
 
@@ -61,7 +62,8 @@ HEADERS += \
     match.h \
     history.h \
     trendchart.h \
-    beambrain.h
+    beambrain.h \
+    genlist.h
 
 CONFIG += c++11
 

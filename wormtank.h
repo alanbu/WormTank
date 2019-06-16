@@ -73,6 +73,7 @@ public:
 
     QObject *league();
     QObject *history();
+    uint latestGeneration(QString wormType);
 
     // Stats from last generation
     unsigned int leaderAge() const {return m_leaderAge;}

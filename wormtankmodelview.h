@@ -3,6 +3,7 @@
 
 #include "wormtank.h"
 #include "wormcount.h"
+#include "genlist.h"
 #include <QObject>
 #include <QTimer>
 #include <QStringList>
@@ -15,6 +16,7 @@ class WormTankModelView : public QObject
     Q_PROPERTY(QString finishedText READ finishedText NOTIFY finishedTextChanged)
     Q_PROPERTY(bool finishedTextVisible READ finishedTextVisible NOTIFY finishedTextVisibleChanged)
     Q_PROPERTY(QString statusText READ statusText NOTIFY statusTextChanged)
+    Q_PROPERTY(QObject *generationList READ generationList NOTIFY generationListChanged)
 
 public:
     explicit WormTankModelView(WormTank &wormTank, QObject *parent = 0);
@@ -26,6 +28,7 @@ public:
     QString finishedText() const {return m_finishedText;}
     bool finishedTextVisible() const {return m_finishedTextVisible;}
     QString statusText() const {return m_statusText;}
+    QObject *generationList() const {return m_generationList;}
 
     void setFinishedText(QString newText);
     void setFinishedTextVisible(bool visible);
@@ -36,6 +39,7 @@ signals:
     void finishedTextChanged(QString text);
     void finishedTextVisibleChanged(bool visible);
     void statusTextChanged(QString text);
+    void generationListChanged(QObject *generationList);
 
 public slots:
     void start(QString wormType, bool reset);
@@ -54,6 +58,9 @@ public slots:
     void wormListHidden();
     void viewLeague();
     void viewHistory();
+    void viewGeneration();
+
+    void updateGenerationList(uint generation);
 
 protected:
     void startRun();
@@ -66,7 +73,9 @@ protected:
     QQuickView *m_wormListView;
     QQuickView *m_leagueView;
     QQuickView *m_historyView;
+    QQuickView *m_generationView;
     QList<QObject *> *m_wormList;
+    GenList *m_generationList;
     QString m_finishedText;
     bool m_finishedTextVisible;
     QString m_statusText;

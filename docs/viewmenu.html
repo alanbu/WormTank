@@ -13,6 +13,14 @@ current state of the simulation.</p>
   <td><a href="#league">League</a></td>
   <td>Shows a window containing the current league results</td>
 </tr>
+<tr>
+  <td><a href="#history">History</a></td>
+  <td>Shows a window containing the history for the current worm tank</td>
+</tr>
+<tr>
+  <td><a href="#generations">Generations</a></td>
+  <td>Shows a window containing the generation each worm type has been trained to</td>
+</tr>
 </table>
 
 <h2 id="wormlist">Worm List</h2>
@@ -44,12 +52,108 @@ by their full name and position.</b>
         line is removed from the table.</td>
   </tr>
 </table>
+</p>
 
 <h2 id="league">League</h2>
 
 <p>This shows the current positions of the various worm types
 in the league, the result of the last game and what the current/next
 game will be.</p>
+
+<p>The fields are:
+<table>
+  <tr>
+     <td>Team</td>
+     <td>The worm type</td>
+  </tr>
+  <tr>
+     <td>Played</td>
+     <td>The number of games played</td>
+  </tr>
+  <tr>
+     <td>Won</td>
+     <td>The number of games won</td>
+  </tr>
+  <tr>
+     <td>Drew</td>
+     <td>The number of games drew</td>
+  </tr>
+  <tr>
+     <td>Lost</td>
+     <td>The number of games lost</td>
+  </tr>
+  <tr>
+     <td>For</td>
+     <td>Total of points scored in all games</td>
+  </tr>
+  <tr>
+     <td>Agnst</td>
+     <td>Total of points scored against this team in all games</td>
+  </tr>
+  <tr>
+     <td>Diff</td>
+     <td>The difference between poinst scored for and against</td>
+  </tr>
+  <tr>
+     <td>Points</td>
+     <td>The points gained. 2 points for a win, 1 point for a draw.</td>
+  </tr>
+</table>
+</p>
+
+<h2 id="history">History</h2>
+
+<p>Shows the results of the last ten generations of the
+current worm tank. This is relevant to the training mode.</p>
+<p>The latest generation is shown at the top.</p>
+
+<p>The fields are:
+<table>
+  <tr>
+     <td>Ticks</td>
+     <td>The duration of the generation</td>
+  </tr>
+  <tr>
+     <td>Food left</td>
+     <td>The amount of food left at the end of the generation</td>
+  </tr>
+  <tr>
+     <td>Max energy</td>
+     <td>The maximum energy reached during the generation</td>
+  </tr>
+  <tr>
+    <td>Leader</td>
+    <td>The position the worm with the most energy at the end
+        of the generation started the generation at.
+    </td>
+  </tr>
+  <tr>
+    <td>Colour</td>
+    <td>The colour of the leader</td>
+  </tr>
+
+</table>
+</p>
+
+
+<h2 id="generation">Generations</h2>
+
+<p>This shows the current generation for each of the different
+worm types</p>
+
+<p>The fields are:
+<table>
+  <tr>
+     <td>Name</td>
+     <td>Name of the worm type</td>
+  </tr>
+  <tr>
+     <td>Generation</td>
+     <td>The current generation of this worm type</td>
+  </tr>
+</table>
+</p>
+
 
 </body>
 </html>

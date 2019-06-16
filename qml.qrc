@@ -9,5 +9,6 @@
         <file>BattleForm.ui.qml</file>
         <file>LeagueView.qml</file>
         <file>HistoryView.qml</file>
+        <file>GenerationView.qml</file>
     </qresource>
 </RCC>

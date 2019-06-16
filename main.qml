@@ -74,6 +74,10 @@ ApplicationWindow {
                 text : qsTr("&History")
                 onTriggered: wormTankModelView.viewHistory()
             }
+            MenuItem {
+                text : qsTr("&Generations")
+                onTriggered: wormTankModelView.viewGeneration()
+            }
         }
         Menu {
             title: qsTr("Help")
