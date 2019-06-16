@@ -174,6 +174,8 @@ void League::load()
              if (m_current == -1) m_table.addResult(match);
 			 m_matches.push_back(match);
 		 }
+         // No games found to play so at end of season
+         if (m_current == -1) m_current = numMatches;
 	 }
 	 else
 	 {
@@ -233,7 +235,7 @@ QString League::leagueFileName() const
 	 m_teams.clear();
 	 m_matches.clear();
 	 m_table.clear();
-	 m_current = 0;
+     m_current = -1;
      m_team1Score = 0;
      m_team2Score = 0;
 	 int numTeams = 0;

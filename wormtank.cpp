@@ -62,6 +62,7 @@ QColor WormTank::colourForIndex(int index)
 void WormTank::start(QString wormType, bool resetTank)
 {
     m_mode = NormalMode;
+    setName(wormType);
     if (resetTank || !loadLatest(wormType)) reset(wormType);
     m_survivors = 10;
 }
@@ -169,8 +170,10 @@ QString WormTank::leagueWinner() const
 void WormTank::startLeague()
 {
     m_mode = LeagueMode;
-    if (!loadLeague())
+    m_survivors = 10;
+    if (!loadLeague() || leagueWon())
     {
+        m_league->newSeason();
         nextLeagueMatch();
     }
 }
@@ -253,13 +256,15 @@ bool WormTank::loadLatest(QString wormType)
     {
         try
         {
-            load(loadFileName);
-            setName(wormType);
+            if (load(loadFileName))
+            {
+                setName(wormType);
 
-            // Draw tank
-            setupTank();
+                // Draw tank
+                setupTank();
 
-            fileLoaded = true;
+                fileLoaded = true;
+            }
         } catch(...)
         {
             fileLoaded = false;
@@ -946,7 +951,11 @@ void WormTank::endOfLeagueGeneration()
         {
             Worm *worm = m_worms[j];
             if (worm->colour() >= LEADER_COLOUR + CHILD_OFFSET) worm->setColour(worm->colour()-CHILD_OFFSET);
-            m_worms.push_back(worm->randomChild(20, 5));
+            Worm *child = worm->randomChild(20, 5);
+            child->clearTail();
+            child->resetPosition(getEmptyPos(), std::rand() & 3);
+            m_worms.push_back(child);
+            m_tankImage.setPixel(child->headPos(), worm->colour());
         }
 
         m_generation++;

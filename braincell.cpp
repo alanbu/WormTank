@@ -150,7 +150,7 @@ void LinkedBrainCell::readWeights(QDataStream &in)
  */
 void LinkedBrainCell::writeLinks(QDataStream &out, std::map<BrainCell *, int> &linkMap)
 {
-    out << m_links.size();
+    out << (int)m_links.size();
     for (auto link : m_links)
     {
         auto found = linkMap.find(link.first);

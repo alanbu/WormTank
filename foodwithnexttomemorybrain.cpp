@@ -213,7 +213,7 @@ void FoodWithNextToMemoryBrain::mix(Brain *other)
  */
 void FoodWithNextToMemoryBrain::write(QDataStream &out)
 {
-    out << m_memories.size();
+    out << (int)m_memories.size();
     for (auto memory : m_memories)
     {
         out << memory.first << memory.second;

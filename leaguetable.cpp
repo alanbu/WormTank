@@ -85,7 +85,7 @@ void LeagueTable::addResult(int team, int scoreFor, int scoreAgainst)
         ) k++;
 
     QVector<int> rolesChanged;
-    for (int role = WonRole; role <= PointsRole; role++)
+    for (int role = PlayedRole; role <= PointsRole; role++)
     {
         rolesChanged.push_back(role);
     }
