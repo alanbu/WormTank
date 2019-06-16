@@ -235,6 +235,7 @@ void WormTank::startLeague()
 {
     m_mode = LeagueMode;
     m_survivors = 10;
+    clear();
     if (!loadLeague() || leagueWon())
     {
         m_league->newSeason();
@@ -1595,6 +1596,108 @@ void WormTank::wormCount(QPoint pt, int dir, int *ranges, int numRanges, InputBr
 	}
 	setNotFoundRanges(numRanges, inputs);
 }
+
+/**
+ * @brief Send a beam out left, ahead and right setting inputs depending
+ * on if the first thing hit is food or not
+ * @param pt Worm head position
+ * @param dir direction worm is facing
+ * @param inputs 4 InputBrainCell array for left, ahead, right and no food hit
+ */
+void WormTank::foodBeam(QPoint pt, int dir, InputBrainCell *inputs)
+{
+    inputs[0].setValue(beam(pt, (dir + 3) % 4) == FOOD_COLOUR);
+    inputs[1].setValue(beam(pt, dir) == FOOD_COLOUR);
+    inputs[2].setValue(beam(pt, (dir + 1) % 4) == FOOD_COLOUR);
+    inputs[3].setValue(!(inputs[0].value() | inputs[1].value() | inputs[2].value()));
+}
+
+/**
+ * @brief Send a beam out left, ahead and right setting inputs depending
+ * on if the first thing hit is a worm or not
+ * @param pt Worm head position
+ * @param dir direction worm is facing
+ * @param inputs 4 InputBrainCell array for left, ahead, right and no worm hit
+ */
+void WormTank::wormBeam(QPoint pt, int dir, InputBrainCell *inputs)
+{
+    int hit = beam(pt, (dir + 3) % 4);
+    inputs[0].setValue( hit != FOOD_COLOUR && hit != GROUND_COLOUR );
+    hit = beam(pt, dir);
+    inputs[1].setValue( hit != FOOD_COLOUR && hit != GROUND_COLOUR );
+    hit = beam(pt, (dir + 1) % 4);
+    inputs[2].setValue( hit != FOOD_COLOUR && hit != GROUND_COLOUR );
+    inputs[3].setValue(!(inputs[0].value() | inputs[1].value() | inputs[2].value()));
+}
+
+/**
+ * @brief Send a beam out left, ahead and right setting inputs depending
+ * on if the first thing hit is wall or not
+ * @param pt Worm head position
+ * @param dir direction worm is facing
+ * @param inputs 4 InputBrainCell array for left, ahead, right and no wall hit
+ */
+void WormTank::wallBeam(QPoint pt, int dir, InputBrainCell *inputs)
+{
+    inputs[0].setValue(beam(pt, (dir + 3) % 4) == GROUND_COLOUR);
+    inputs[1].setValue(beam(pt, dir) == GROUND_COLOUR);
+    inputs[2].setValue(beam(pt, (dir + 1) % 4) == GROUND_COLOUR);
+    inputs[3].setValue(!(inputs[0].value() | inputs[1].value() | inputs[2].value()));
+}
+
+/**
+ * @brief Return first thing hit in straight line from pt in given direction.
+ * @param pt worm head position
+ * @param dir direction to send beam
+ * @return COLOUR of first thing hits or GROUND_COLOUR for the wall
+ */
+int WormTank::beam(QPoint pt, int dir) const
+{
+    int hit = GROUND_COLOUR;
+    int x = pt.x();
+    int y = pt.y();
+
+    switch(dir)
+    {
+    case 0: // North
+        while (y < m_height-1 && hit == GROUND_COLOUR)
+        {
+            y++;
+            hit = *(m_tankImage.constScanLine(y) + x);
+        }
+        break;
+    case 1: // East
+        {
+            auto line = m_tankImage.constScanLine(y);
+            while (x < m_width -1 && hit == GROUND_COLOUR)
+            {
+                x++;
+                hit = *(line + x);
+            }
+        }
+        break;
+    case 2: // South
+        while (y > 0 && hit == GROUND_COLOUR)
+        {
+            y--;
+            hit = *(m_tankImage.constScanLine(y) + x);
+        }
+        break;
+    case 3: // West
+        {
+            auto line = m_tankImage.constScanLine(y);
+            while (x > 0 && hit == GROUND_COLOUR)
+            {
+                x--;
+                hit = *(line + x);
+            }
+        }
+        break;
+    }
+
+    return hit;
+}
+
 
 /**
  * @brief WormTankImageProvider construct

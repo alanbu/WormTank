@@ -33,6 +33,9 @@ public:
         WallRange,
         FoodCount,
         WormCount,
+        FoodBeam,
+        WormBeam,
+        WallBeam,
         MaxSensors
     };
 
@@ -52,7 +55,7 @@ protected:
     inline SensorType sensorType(Sensor sensor) const {return SensorType(sensor >> 16);}
     inline int sensorRange(Sensor sensor) const {return (sensor & 0xFFFF);}
     inline Sensor makeSensor(SensorType type, int range) const {return (type << 16) | range;}
-    inline bool sensorHasRange(SensorType type) const {return (type >= FoodRange);}
+    inline bool sensorHasRange(SensorType type) const {return (type >= FoodRange && type < FoodBeam);}
     bool hasSensorOfType(SensorType type) const;
     uint findSensor(Sensor sensor) const;
     uint sensorInsertPos(Sensor sensor) const;

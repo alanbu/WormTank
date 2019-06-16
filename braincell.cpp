@@ -215,3 +215,18 @@ void LinkedBrainCell::mix(const LinkedBrainCell &other)
         }
     }
 }
+
+/**
+ * @brief Debugging aid to check links point to valid inputs
+ * @param first first input
+ * @param last  last input
+ * @return true if OK
+ */
+bool LinkedBrainCell::checkLinks(BrainCell *first, BrainCell *last)
+{
+    for (auto link : m_links)
+    {
+        if (link.first < first || link.first > last) return false;
+    }
+    return true;
+}

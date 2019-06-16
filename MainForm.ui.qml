@@ -7,12 +7,11 @@ Item {
     width: 700
     height: 491
 
-    Text {
+    Label {
         id: text1
         x: 19
         y: 8
         text: qsTr("Generation")
-        font.pixelSize: 12
     }
 
     Text {
@@ -20,7 +19,6 @@ Item {
         x: 97
         y: 8
         text: wormTank.generation
-        font.pixelSize: 12
     }
 
     Image {
@@ -67,7 +65,7 @@ Item {
 
     Label {
         id: label2
-        x: 305
+        x: 350
         y: 8
         text: wormTank.tick
     }
@@ -81,7 +79,7 @@ Item {
 
     Label {
         id: label4
-        x: 97
+        x: 120
         y: 33
         text: wormTank.wormsLeft
     }
@@ -95,7 +93,7 @@ Item {
 
     Label {
         id: label6
-        x: 320
+        x: 350
         y: 33
         text: wormTank.foodLeft
     }
@@ -109,7 +107,7 @@ Item {
 
     Label {
         id: label8
-        x: 97
+        x: 120
         y: 55
         text: wormTank.maxEnergy
     }
@@ -132,7 +130,7 @@ Item {
 
         Text {
             id: text4
-            x: 90
+            x: 905
             y: 6
             text: wormTank.leaderAge
             font.pixelSize: 12
@@ -145,7 +143,6 @@ Item {
             width: 72
             height: 14
             text: qsTr("Leading for")
-            font.pixelSize: 12
         }
 
         Text {
@@ -153,7 +150,6 @@ Item {
             x: 85
             y: 26
             text: wormTank.leaderAtTop
-            font.pixelSize: 12
         }
 
         Text {
@@ -161,7 +157,6 @@ Item {
             x: 6
             y: 46
             text: qsTr("Ancestors")
-            font.pixelSize: 12
         }
 
         ListView {
@@ -203,7 +198,6 @@ Item {
             x: 6
             y: 13
             text: qsTr("Ticks")
-            font.pixelSize: 12
         }
 
         Text {
@@ -211,7 +205,6 @@ Item {
             x: 88
             y: 13
             text: wormTank.lastGenerationTicks
-            font.pixelSize: 12
         }
 
         Text {
@@ -221,7 +214,6 @@ Item {
             width: 23
             height: 19
             text: qsTr("Food left")
-            font.pixelSize: 12
         }
 
         Text {
@@ -229,7 +221,6 @@ Item {
             x: 88
             y: 42
             text: wormTank.lastGenerationFoodLeft
-            font.pixelSize: 12
         }
 
         Text {
@@ -237,7 +228,6 @@ Item {
             x: 10
             y: 64
             text: qsTr("Max energy")
-            font.pixelSize: 12
         }
 
         Text {
@@ -245,7 +235,6 @@ Item {
             x: 88
             y: 64
             text: wormTank.lastGenerationMaxEnergy
-            font.pixelSize: 12
         }
     }
 
@@ -263,7 +252,6 @@ Item {
         x: 445
         y: 323
         text: qsTr("Ticks")
-        font.pixelSize: 12
     }
 
     Text {
@@ -271,7 +259,6 @@ Item {
         x: 443
         y: 370
         text: qsTr("Food")
-        font.pixelSize: 12
     }
 
     TrendChart {
@@ -299,8 +286,6 @@ Item {
         x: 443
         y: 421
         text: qsTr("Energy")
-        font.pixelSize: 12
     }
-
 }
 

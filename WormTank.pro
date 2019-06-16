@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     league.cpp \
     leaguetable.cpp \
     history.cpp \
-    trendchart.cpp
+    trendchart.cpp \
+    beambrain.cpp
 
 RESOURCES += qml.qrc
 
@@ -59,7 +60,8 @@ HEADERS += \
     leagueline.h \
     match.h \
     history.h \
-    trendchart.h
+    trendchart.h \
+    beambrain.h
 
 CONFIG += c++11
 

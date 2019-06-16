@@ -87,6 +87,9 @@ std::string MutantBrain::fullName() const
         case FoodCount:  name << "Fc"; addRanges = true; break;
         case WormCount:  name << "Fc"; addRanges = true; break;
         case MaxSensors: name << "X"; break; // Shouldn't happen
+        case FoodBeam:   name << "Fb"; break;
+        case WormBeam:   name << "Wb"; break;
+        case WallBeam:   name << "Eb"; break;
         }
         if (addRanges)
         {
@@ -187,8 +190,12 @@ void MutantBrain::read(QDataStream &in)
     }
     BrainCell *linkArray[m_numInputs];
     for (uint j = 0; j < m_numInputs; j++) linkArray[j] = &m_inputs[j];
-    for (uint j = 0; j < 2; j++) m_outputs[j].readLinks(in, linkArray);
-    for (uint j = 0; j < m_numSensors; j++) in >> m_sensors[j];
+    for (uint j = 0; j < 2; j++)
+    {
+        m_outputs[j].readLinks(in, linkArray);
+        Q_ASSERT(m_outputs[j].checkLinks(m_inputs, m_inputs + m_numInputs - 1));
+    }
+    for (uint j = 0; j < m_numSensors; j++) in >> m_sensors[j];    
 }
 
 
@@ -247,6 +254,15 @@ void MutantBrain::fillInputs(QPoint pt, int dir)
                break;
            case WormCount:
                m_worm->tank()->wormCount(pt, dir, ranges, numRanges, inputs );
+               break;
+           case FoodBeam:
+               m_worm->tank()->foodBeam(pt, dir, inputs);
+               break;
+           case WormBeam:
+               m_worm->tank()->wormBeam(pt, dir, inputs);
+               break;
+           case WallBeam:
+               m_worm->tank()->wallBeam(pt, dir, inputs);
                break;
            case MaxSensors:
                // Should never get here
@@ -479,9 +495,9 @@ void MutantBrain::addSensor(Sensor newSensor)
         }
         if (addIdx < m_numInputs)
         {
-            m_outputs[j].renameLinks(newInputs + (addIdx+1) * 4 - 1,
+            m_outputs[j].renameLinks(newInputs + (addIdx+1) * 4,
                                      m_inputs + addIdx * 4,
-                                     m_inputs + m_numInputs * 4 - 1);
+                                     m_inputs + m_numInputs - 1);
         }
     }
 
@@ -500,6 +516,11 @@ void MutantBrain::addSensor(Sensor newSensor)
     m_sensors = newSensors;
     m_numInputs += 4;
     m_numSensors++;
+
+    for (int j = 0; j < 2; j++)
+    {
+        Q_ASSERT(m_outputs[j].checkLinks(m_inputs, m_inputs + m_numInputs - 1));
+    }
 }
 
 /**
@@ -528,11 +549,11 @@ void MutantBrain::removeSensorAt(uint removeIdx)
     for (int j = 0; j < 2; j++)
     {
         InputBrainCell *removeStart = m_inputs + 4 * removeIdx;
-        InputBrainCell *removeEnd = removeStart + 4;
+        InputBrainCell *removeEnd = removeStart + 3;
         m_outputs[j].removeLinks(removeStart, removeEnd);
         if (removeIdx < m_numSensors - 1)
         {
-            m_outputs[j].renameLinks(removeStart, removeEnd, m_inputs + m_numSensors * 4 - 1);
+            m_outputs[j].renameLinks(removeStart, removeEnd+1, m_inputs + m_numInputs - 1);
         }
     }
 
@@ -542,5 +563,10 @@ void MutantBrain::removeSensorAt(uint removeIdx)
     for (uint j = removeIdx * 4; j < m_numInputs; j++)
     {
         m_inputs[j].setValue(m_inputs[j+4].value());
+    }
+
+    for (int j = 0; j < 2; j++)
+    {
+        Q_ASSERT(m_outputs[j].checkLinks(m_inputs, m_inputs + m_numInputs - 1));
     }
 }

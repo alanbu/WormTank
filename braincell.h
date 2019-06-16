@@ -53,6 +53,8 @@ public:
     void average(const LinkedBrainCell &other);
     void mix(const LinkedBrainCell &other);
 
+    bool checkLinks(BrainCell *first, BrainCell *last);
+
 private:
     std::vector< std::pair<BrainCell *, int> > m_links;
 };

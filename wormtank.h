@@ -100,6 +100,10 @@ public:
     void foodCount(QPoint pt, int dir, int *ranges, int numRanges, InputBrainCell *inputs);
     void wormCount(QPoint pt, int dir, int *ranges, int numRanges, InputBrainCell *inputs);
 
+    void foodBeam(QPoint pt, int dir, InputBrainCell *inputs);
+    void wormBeam(QPoint pt, int dir, InputBrainCell *inputs);
+    void wallBeam(QPoint pt, int dir, InputBrainCell *inputs);
+
     // Helpers
     /**
      * @brief Check if a point is in the tank
@@ -133,6 +137,7 @@ protected:
     void setFoundRanges(QPoint ptRelative, int dir, int *rangesSquared, int numRanges, InputBrainCell *inputs);
     void setNotFoundRanges(int numRanges, InputBrainCell *inputs);
     void countFoundRanges(QPoint ptRelative, int dir, int *rangesSquared, int numRanges, InputBrainCell *inputs);
+    int beam(QPoint pt, int dir) const;
 
     QString latestFileName(QString wormName);
     QString battleFileName();
