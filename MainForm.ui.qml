@@ -1,6 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.2
+import WormTank 1.0
 
 Item {
     width: 700
@@ -118,7 +119,7 @@ Item {
         x: 445
         y: 80
         width: 234
-        height: 67
+        height: 109
         title: qsTr("Leader stats")
 
         Text {
@@ -154,12 +155,45 @@ Item {
             text: wormTank.leaderAtTop
             font.pixelSize: 12
         }
+
+        Text {
+            id: text14
+            x: 6
+            y: 46
+            text: qsTr("Ancestors")
+            font.pixelSize: 12
+        }
+
+        ListView {
+            id: listView1
+            x: 6
+            y: 66
+            width: 214
+            height: 16
+            orientation: ListView.Horizontal
+            delegate: Item {
+                width: 30
+                height: 16
+                Rectangle {
+                    width: 30
+                    height: 16
+                    color: leaderColour
+                    Text {
+                        text: leaderName
+                        font.pixelSize: 8
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+                }
+            }
+            model: wormTank.history
+        }
     }
 
     GroupBox {
         id: groupBox2
-        x: 440
-        y: 174
+        x: 443
+        y: 200
         width: 239
         height: 104
         title: qsTr("Last generation stats")
@@ -213,6 +247,59 @@ Item {
             text: wormTank.lastGenerationMaxEnergy
             font.pixelSize: 12
         }
+    }
+
+    TrendChart {
+        x: 489
+        y: 310
+        width: 177
+        height: 39
+        model: wormTank.history
+        role: "ticks"
+    }
+
+    Text {
+        id: text15
+        x: 445
+        y: 323
+        text: qsTr("Ticks")
+        font.pixelSize: 12
+    }
+
+    Text {
+        id: text16
+        x: 443
+        y: 370
+        text: qsTr("Food")
+        font.pixelSize: 12
+    }
+
+    TrendChart {
+        x: 489
+        y: 358
+        width: 177
+        height: 39
+        colour: "#008000"
+        role: "foodLeft"
+        model: wormTank.history
+    }
+
+    TrendChart {
+        x: 489
+        y: 408
+        width: 177
+        height: 39
+        colour: "#0000ff"
+        role: "maxEnergy"
+        model: wormTank.history
+    }
+
+    Text {
+        id: text17
+        x: 443
+        y: 421
+        text: qsTr("Energy")
+        font.pixelSize: 12
     }
 
 }

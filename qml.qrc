@@ -8,5 +8,6 @@
         <file>Battle.qml</file>
         <file>BattleForm.ui.qml</file>
         <file>LeagueView.qml</file>
+        <file>HistoryView.qml</file>
     </qresource>
 </RCC>

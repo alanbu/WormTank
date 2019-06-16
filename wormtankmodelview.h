@@ -41,6 +41,7 @@ public slots:
     void start(QString wormType, bool reset);
 	void startBattle(QString wormType1, QString wormType2, bool reset);
     void startLeague();
+    void startArena();
 
     void battleEnded();
     void leagueEnded();
@@ -52,6 +53,7 @@ public slots:
     void updateWormList();
     void wormListHidden();
     void viewLeague();
+    void viewHistory();
 
 protected:
     void startRun();
@@ -63,6 +65,7 @@ protected:
     QStringList m_wormTypes;
     QQuickView *m_wormListView;
     QQuickView *m_leagueView;
+    QQuickView *m_historyView;
     QList<QObject *> *m_wormList;
     QString m_finishedText;
     bool m_finishedTextVisible;

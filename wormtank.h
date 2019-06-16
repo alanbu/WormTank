@@ -8,6 +8,7 @@
 #include "QQuickImageProvider"
 #include "worm.h"
 #include "braincell.h"
+#include "history.h"
 
 class League;
 
@@ -29,6 +30,7 @@ class WormTank : public QObject
     Q_PROPERTY(uint lastGenerationFoodLeft READ lastGenerationFoodLeft NOTIFY lastGenerationFoodLeftChanged)
     Q_PROPERTY(uint lastGenerationMaxEnergy READ lastGenerationMaxEnergy NOTIFY lastGenerationMaxEnergyChanged)
     Q_PROPERTY(QObject *league READ league NOTIFY leagueChanged)
+    Q_PROPERTY(QObject *history READ history NOTIFY historyChanged)
 
 public:
     explicit WormTank(QObject *parent = 0);
@@ -37,11 +39,14 @@ public:
 	void start(QString wormType, bool reset);
 	void startBattle(QString wormType1, QString wormType2, bool reset);
     void startLeague();
+    void startArena();
 
     bool battleWon() const;
     bool leagueWon() const;
+    bool arenaWon() const;
 
     QString battleWinner() const;
+    QString arenaWinner() const;
     QString leagueWinner() const;
     void getLeagueMatchResult(QString &team1, QString &team2, int &score1, int &score2);
 
@@ -49,12 +54,13 @@ public:
     bool loadLatest(QString wormType);
     bool loadBattle();
     bool loadLeague();
+    bool loadArena();
     void reset(QString wormType);
 
     void save();
 
     QString name() const {return m_name;}
-    enum Mode {NormalMode, BattleMode, LeagueMode};
+    enum Mode {NormalMode, BattleMode, LeagueMode, ArenaMode};
     Mode mode() const {return m_mode;}
 
     uint generation() const {return m_generation;}
@@ -66,14 +72,14 @@ public:
     const std::vector<Worm *> &worms() const {return m_worms;}
 
     QObject *league();
+    QObject *history();
 
     // Stats from last generation
     unsigned int leaderAge() const {return m_leaderAge;}
     unsigned int leaderAtTop() const {return m_leaderAtTop;}
-    uint lastGenerationTicks() const {return m_lastGenerationTicks;}
-    uint lastGenerationFoodLeft() const {return m_lastGenerationFoodLeft;}
-    uint lastGenerationMaxEnergy() const {return m_lastGenerationMaxEnergy;}
-
+    uint lastGenerationTicks() const;
+    uint lastGenerationFoodLeft() const;
+    uint lastGenerationMaxEnergy() const;
 
     unsigned int maxDistance() const {return m_maxDistance;}
 
@@ -110,9 +116,6 @@ protected:
     void setMaxEnergy(unsigned int energy);
     void setLeaderAge(unsigned int age);
     void setLeaderAtTop(unsigned int atTop);
-    void setLastGenerationTicks(uint ticks);
-    void setLastGenerationFoodLeft(uint left);
-    void setLastGenerationMaxEnergy(uint energy);
 
     void save(QString fileName);
     bool load(QString fileName);
@@ -121,6 +124,7 @@ protected:
     bool loadWorms(QString wormType, int colour, uint count);
     void addFood(uint count);
 	void moveFoodFromEdges();
+    void clearExcessFood();
 
     void setFirstGenerationVars();
     void newGeneration();
@@ -133,6 +137,7 @@ protected:
     QString latestFileName(QString wormName);
     QString battleFileName();
     QString leagueFileName();
+    QString arenaFileName();
 
 
 signals:
@@ -150,6 +155,7 @@ signals:
     void matchEnded();
     void leagueChanged();
     void leagueFinished();
+    void historyChanged();
 
 public slots:
     void step();
@@ -179,10 +185,8 @@ private:
     unsigned int m_maxDistance;
     uint m_leaderAge;
     uint m_leaderAtTop;
-    uint m_lastGenerationTicks;
-    uint m_lastGenerationFoodLeft;
-    uint m_lastGenerationMaxEnergy;
     League *m_league;
+    History m_history;
 };
 
 /**

@@ -21,7 +21,9 @@ SOURCES += main.cpp \
     foodcountbrain.cpp \
     foodwithnexttomemorybrain.cpp \
     league.cpp \
-    leaguetable.cpp
+    leaguetable.cpp \
+    history.cpp \
+    trendchart.cpp
 
 RESOURCES += qml.qrc
 
@@ -55,7 +57,9 @@ HEADERS += \
     league.h \
     leaguetable.h \
     leagueline.h \
-    match.h
+    match.h \
+    history.h \
+    trendchart.h
 
 CONFIG += c++11
 

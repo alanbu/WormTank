@@ -86,12 +86,12 @@ void WormTank::startBattle(QString wormType1, QString wormType2, bool reset)
 	clear();
 	if (reset)
 	{
-        addNewWorms(wormType1, LEADER_COLOUR+1, 10);
-        addNewWorms(wormType2, LEADER_COLOUR+2, 10);
+        addNewWorms(wormType1, TEAM1_COLOUR, 10);
+        addNewWorms(wormType2, TEAM2_COLOUR, 10);
     } else
     {
-        if (!loadWorms(wormType1, LEADER_COLOUR+1, 10)) addNewWorms(wormType1, LEADER_COLOUR+1, 10);
-        if (!loadWorms(wormType2, LEADER_COLOUR+2, 10)) addNewWorms(wormType2, LEADER_COLOUR+2, 10);
+        if (!loadWorms(wormType1, TEAM1_COLOUR, 10)) addNewWorms(wormType1, TEAM1_COLOUR, 10);
+        if (!loadWorms(wormType2, TEAM2_COLOUR, 10)) addNewWorms(wormType2, TEAM2_COLOUR, 10);
     }
 
     // Mix worms so each type alternates
@@ -125,6 +125,56 @@ bool WormTank::battleWon() const
     return true;
 }
 
+
+/**
+ * @brief start the arena battle between all the worm types
+ */
+void WormTank::startArena()
+{
+    QString name("Arena");
+
+    m_mode = ArenaMode;
+    setName(name);
+    clear();
+
+    int colour = TEAM1_COLOUR;
+
+    // Worms are named after their brains
+    for (auto creator : BrainFactory::instance()->creators())
+    {
+        QString wormType = QString(creator.first.c_str());
+        if (!loadWorms(wormType, colour, 10)) addNewWorms(wormType, colour, 10);
+        // Only set up for the first 20 for now
+        if (++colour == CHILD_COLOUR + CHILD_OFFSET) break;
+    }
+
+    // Shuffle up the worms - to avoid some types getting advantages
+    // from all starting earlier
+    std::random_shuffle(m_worms.begin(), m_worms.end());
+
+    addFood(m_startFood);
+
+    setFirstGenerationVars();
+    m_survivors = 1;
+}
+
+/**
+ * @brief Check if the arena has finished
+ * @return true if ended, false it running or not a battle
+ */
+bool WormTank::arenaWon() const
+{
+    if (m_mode != ArenaMode) return false;
+    if (m_survivors <= 1) return true;
+    std::string firstType;
+    for (auto worm : m_worms)
+    {
+        if (firstType.empty()) firstType = worm->name();
+        else if (firstType != worm->name()) return false;
+    }
+    return true;
+}
+
 /**
  * @brief Check if the current league is finished
  * @return true if it's finished
@@ -146,6 +196,20 @@ QString WormTank::battleWinner() const
 {
     QString winner;
     if (m_mode == BattleMode) winner = m_worms[0]->name().c_str();
+    return winner;
+}
+
+/**
+ * @brief Return the last arena winner
+ *
+ * Only valid in arena mode after a battle has been won
+ *
+ * @return arena winner or ""
+ */
+QString WormTank::arenaWinner() const
+{
+    QString winner;
+    if (m_mode == ArenaMode) winner = m_worms[0]->name().c_str();
     return winner;
 }
 
@@ -194,6 +258,42 @@ QObject *WormTank::league()
 }
 
 /**
+ * @brief Get history list for QML
+ * @return  history list
+ */
+QObject *WormTank::history()
+{
+    return &m_history;
+}
+
+/**
+ * @brief Number of ticks in the last generation
+ * @return number of ticks or 0 if first generation
+ */
+uint WormTank::lastGenerationTicks() const
+{
+    return (m_history.numItems() > 0) ? m_history.items()[0].ticks() : 0;
+}
+
+/**
+ * @brief Number of ticks in the last generation
+ * @return number of ticks or 0 if first generation
+ */
+uint WormTank::lastGenerationFoodLeft() const
+{
+    return (m_history.numItems() > 0) ? m_history.items()[0].foodLeft() : 0;
+}
+
+/**
+ * @brief Number of ticks in the last generation
+ * @return number of ticks or 0 if first generation
+ */
+uint WormTank::lastGenerationMaxEnergy() const
+{
+    return (m_history.numItems() > 0) ? m_history.items()[0].maxEnergy() : 0;
+}
+
+/**
  * Clear down the worm tank
  */
 void WormTank::clear()
@@ -235,9 +335,9 @@ void WormTank::setupTank()
     setWormsLeft(m_worms.size());
     emit leaderAgeChanged(m_leaderAge);
     emit leaderAtTopChanged(m_leaderAtTop);
-    emit lastGenerationTicksChanged(m_lastGenerationTicks);
-    emit lastGenerationFoodLeftChanged(m_lastGenerationFoodLeft);
-    emit lastGenerationMaxEnergyChanged(m_lastGenerationMaxEnergy);
+    emit lastGenerationTicksChanged(lastGenerationTicks());
+    emit lastGenerationFoodLeftChanged(lastGenerationFoodLeft());
+    emit lastGenerationMaxEnergyChanged(lastGenerationMaxEnergy());
 }
 
 /**
@@ -248,6 +348,7 @@ void WormTank::setupTank()
 bool WormTank::loadLatest(QString wormType)
 {
     clear();
+    m_history.clear();
 
     QString loadFileName = latestFileName(wormType);
     QFile loadFile(loadFileName);
@@ -280,6 +381,7 @@ bool WormTank::loadLatest(QString wormType)
  */
 bool WormTank::loadBattle()
 {
+    m_history.clear();
     if (load(battleFileName()))
     {
         emit nameChanged(m_name);
@@ -297,6 +399,7 @@ bool WormTank::loadBattle()
  */
 bool WormTank::loadLeague()
 {
+    m_history.clear();
     league(); // Ensures league table is loaded
     if (load(leagueFileName()))
     {
@@ -308,6 +411,26 @@ bool WormTank::loadLeague()
     }
     return false;
 }
+
+
+/**
+ * @brief load arena in progress
+ * @return true if successful
+ */
+bool WormTank::loadArena()
+{
+    m_history.clear();
+    if (load(arenaFileName()))
+    {
+        emit nameChanged(m_name);
+        setupTank();
+        m_survivors = 1;
+        if (arenaWon()) m_survivors = 0;
+        return true;
+    }
+    return false;
+}
+
 
 /**
  * @brief Add new randomly generated worms to the worm tank
@@ -361,6 +484,21 @@ void WormTank::moveFoodFromEdges()
 	}
 }
 
+/**
+ * @brief Removes extra food to leave start generation amount
+ */
+void WormTank::clearExcessFood()
+{
+    if (m_food.size() > m_startFood)
+    {
+        for (auto food = m_food.begin() + m_startFood; food != m_food.end(); ++food)
+        {
+            m_tankImage.setPixel(*food, GROUND_COLOUR);
+        }
+        m_food.erase(m_food.begin() + m_startFood, m_food.end());
+    }
+}
+
 
 /**
  * @brief Reset worm tank to first generation of a given worm type
@@ -391,6 +529,7 @@ void WormTank::setFirstGenerationVars()
 {
     m_generation = 1;
     m_tick = 0;
+    m_history.clear();
     emit generationChanged(m_generation);
     emit tickChanged(m_tick);
     setMaxEnergy(0);
@@ -398,9 +537,9 @@ void WormTank::setFirstGenerationVars()
     setWormsLeft(m_worms.size());
     setLeaderAge(0);
     setLeaderAtTop(0);
-    setLastGenerationTicks(0);
-    setLastGenerationFoodLeft(m_startFood);
-    setLastGenerationMaxEnergy(0);
+    emit lastGenerationTicksChanged(0);
+    emit lastGenerationFoodLeftChanged(m_startFood);
+    emit lastGenerationMaxEnergyChanged(0);
 }
 
 
@@ -409,6 +548,9 @@ void WormTank::setFirstGenerationVars()
  */
 void WormTank::save()
 {
+    // Don't save if nothing loaded
+    if (m_generation == 0) return;
+
     QString fileName;
     switch(m_mode)
     {
@@ -423,6 +565,10 @@ void WormTank::save()
     case LeagueMode:
         fileName = leagueFileName();
         m_league->save();
+        break;
+
+    case ArenaMode:
+        fileName = arenaFileName();
         break;
     }
 
@@ -440,6 +586,7 @@ void WormTank::save()
 QString WormTank::latestFileName(QString wormName)
 {
     QDir latestDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
+    latestDir.mkpath("latest");
     latestDir.cd("latest");
     return latestDir.absoluteFilePath(wormName);
 }
@@ -462,6 +609,16 @@ QString WormTank::leagueFileName()
 {
     QDir latestDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
     return latestDir.absoluteFilePath(QLatin1String("LeagueTank"));
+}
+
+/**
+ * @brief Get file name to load/save current arena
+ * @return file name to full path
+ */
+QString WormTank::arenaFileName()
+{
+    QDir latestDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
+    return latestDir.absoluteFilePath(QLatin1String("ArenaTank"));
 }
 
 /**
@@ -495,9 +652,7 @@ void WormTank::save(QString fileName)
         }
         out << m_leaderAge;
         out << m_leaderAtTop;
-        out << m_lastGenerationTicks;
-        out << m_lastGenerationFoodLeft;
-        out << m_lastGenerationMaxEnergy;
+        m_history.save(out);
     } else
     {
         //TODO: Error handling
@@ -540,9 +695,7 @@ bool WormTank::load(QString fileName)
         }
         in >> m_leaderAge;
         in >> m_leaderAtTop;
-        in >> m_lastGenerationTicks;
-        in >> m_lastGenerationFoodLeft;
-        in >> m_lastGenerationMaxEnergy;
+        m_history.load(in);
 
         return true;
     } else
@@ -658,34 +811,6 @@ void WormTank::setLeaderAtTop(unsigned int atTop)
     }
 }
 
-void WormTank::setLastGenerationTicks(uint ticks)
-{
-    if (ticks != m_lastGenerationTicks)
-    {
-        m_lastGenerationTicks = ticks;
-        emit lastGenerationTicksChanged(ticks);
-    }
-}
-
-void WormTank::setLastGenerationFoodLeft(uint left)
-{
-    if (left != m_lastGenerationFoodLeft)
-    {
-        m_lastGenerationFoodLeft = left;
-        emit lastGenerationFoodLeftChanged(left);
-    }
-}
-
-void WormTank::setLastGenerationMaxEnergy(uint energy)
-{
-    if (energy != m_lastGenerationMaxEnergy)
-    {
-        m_lastGenerationMaxEnergy = energy;
-        emit lastGenerationMaxEnergyChanged(energy);
-    }
-}
-
-
 /**
  * @brief Step through one update of all the worms
  */
@@ -797,10 +922,10 @@ void WormTank::nextGeneration()
     std::sort(m_worms.begin(), m_worms.end(), more_energy);
 
     if (m_worms[0]->colour() == LEADER_COLOUR) setLeaderAtTop(m_leaderAtTop+1);
-    if (m_worms[0]->colour() < LEADER_COLOUR + 10) setLeaderAge(m_leaderAge + 1);
-    setLastGenerationTicks(m_tick);
-    setLastGenerationFoodLeft(m_foodLeft);
-    setLastGenerationMaxEnergy(m_maxEnergy);
+    else setLeaderAtTop(0);
+    if (m_worms[0]->colour() < CHILD_COLOUR) setLeaderAge(m_leaderAge + 1);
+    else setLeaderAge(0);
+    m_history.add(HistoryItem(m_tick, m_worms[0]->colour(), m_foodLeft, m_maxEnergy));
 
     switch(m_mode)
     {
@@ -814,7 +939,16 @@ void WormTank::nextGeneration()
     case LeagueMode:
         endOfLeagueGeneration();
         break;
+
+    case ArenaMode:
+        m_survivors = 0; // Set last worm to do a lap of honour
+        emit matchEnded();
+        break;
     }
+
+    emit lastGenerationTicksChanged(lastGenerationTicks());
+    emit lastGenerationFoodLeftChanged(lastGenerationFoodLeft());
+    emit lastGenerationMaxEnergyChanged(lastGenerationMaxEnergy());
 }
 
 /**
@@ -888,6 +1022,7 @@ void WormTank::newGeneration()
         m_tankImage.setPixel(worm->headPos(), WORM_COLOUR);
     }
 
+    clearExcessFood();
 	moveFoodFromEdges();
 
     // Bring food up to start level
@@ -927,7 +1062,12 @@ void WormTank::endOfLeagueGeneration()
     int numTeam1 = 0;
     for (auto worm : m_worms)
     {
-       if (worm->colour() == LEADER_COLOUR + 1) numTeam1++;
+       if (worm->colour() == TEAM1_COLOUR
+           || worm->colour() == TEAM1_COLOUR + CHILD_OFFSET
+          )
+       {
+           numTeam1++;
+       }
     }
     if (numTeam1 > 10) numTeam1 = 10;
     m_league->updateTeamScore(numTeam1);
@@ -950,7 +1090,7 @@ void WormTank::endOfLeagueGeneration()
         for (int j = 0; j  < 10; j++)
         {
             Worm *worm = m_worms[j];
-            if (worm->colour() >= LEADER_COLOUR + CHILD_OFFSET) worm->setColour(worm->colour()-CHILD_OFFSET);
+            if (worm->colour() >= TEAM1_COLOUR + CHILD_OFFSET) worm->setColour(worm->colour()-CHILD_OFFSET);
             Worm *child = worm->randomChild(20, 5);
             child->clearTail();
             child->resetPosition(getEmptyPos(), std::rand() & 3);
@@ -983,8 +1123,8 @@ void WormTank::nextLeagueMatch()
       setName(name);
       clear();
 
-      if (!loadWorms(wormType1, LEADER_COLOUR+1, 10)) addNewWorms(wormType1, LEADER_COLOUR+1, 10);
-      if (!loadWorms(wormType2, LEADER_COLOUR+2, 10)) addNewWorms(wormType2, LEADER_COLOUR+2, 10);
+      if (!loadWorms(wormType1, TEAM1_COLOUR, 10)) addNewWorms(wormType1, TEAM1_COLOUR, 10);
+      if (!loadWorms(wormType2, TEAM2_COLOUR, 10)) addNewWorms(wormType2, TEAM2_COLOUR, 10);
 
       // Mix worms so each type alternates
       for (uint j = 1; j < 10; j+=2)

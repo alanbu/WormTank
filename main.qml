@@ -7,7 +7,7 @@ import QtQuick.Layouts 1.2
 ApplicationWindow {
     id: applicationWindow
     visible: true
-    width: 640
+    width: 700
     height: 540
     title: qsTr("Worm Tank - ") + wormTank.name
     onClosing: wormTankModelView.exiting();
@@ -31,6 +31,12 @@ ApplicationWindow {
     }
 
     Action {
+        id: arenaAction
+        text: qsTr("Arena")
+        onTriggered: wormTankModelView.startArena()
+    }
+
+    Action {
         id: leagueAction
         text: qsTr("League")
         onTriggered: wormTankModelView.startLeague()
@@ -41,6 +47,7 @@ ApplicationWindow {
             title: qsTr("Run")
             MenuItem { action: startAction }
             MenuItem { action: battleAction }
+            MenuItem { action: arenaAction }
             MenuItem { action: leagueAction }
             MenuItem {
                 text: qsTr("&Save")
@@ -49,7 +56,7 @@ ApplicationWindow {
 
             MenuItem {
                 text: qsTr("Exit")
-                onTriggered: { wormTankModelView.exiting(); Qt.quit(); }
+                onTriggered: wormTankModelView.exiting();
             }
         }
         Menu {
@@ -61,6 +68,11 @@ ApplicationWindow {
             MenuItem {
                 text : qsTr("&League Table")
                 onTriggered: wormTankModelView.viewLeague()
+            }
+
+            MenuItem {
+                text : qsTr("&History")
+                onTriggered: wormTankModelView.viewHistory()
             }
         }
         Menu {

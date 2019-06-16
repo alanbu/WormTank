@@ -24,6 +24,10 @@ const int MIX_COLOUR = 31;
 
 const int NUM_POSITIONS = MIX_COLOUR + 1;
 
+// Reuse some colours for Team games
+const int TEAM1_COLOUR = LEADER_COLOUR;
+const int TEAM2_COLOUR = LEADER_COLOUR+1;
+
 extern const char *PositionNames[NUM_POSITIONS];
 extern QRgb PositionColours[NUM_POSITIONS];
 

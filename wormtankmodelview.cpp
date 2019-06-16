@@ -11,6 +11,7 @@ WormTankModelView::WormTankModelView(WormTank &wormTank, QObject *parent) :
     m_wormTank(wormTank),
     m_wormListView(nullptr),
     m_leagueView(nullptr),
+    m_historyView(nullptr),
     m_wormList(nullptr),
     m_finishedText(""),
     m_finishedTextVisible(false)
@@ -22,6 +23,7 @@ WormTankModelView::~WormTankModelView()
 {
     if (m_wormListView) m_wormListView->destroy();
     delete m_leagueView;
+    delete m_historyView;
     if (m_wormList)
     {
         for (auto wc : *m_wormList)
@@ -133,9 +135,18 @@ void WormTankModelView::startBattle(QString wormType1, QString wormType2, bool r
  */
 void WormTankModelView::battleEnded()
 {
-    disconnectTankSignals();
-    QString msg("The battle has been won by ");
-    msg += m_wormTank.battleWinner();
+    disconnectTankSignals();    
+    QString msg;
+    if (m_wormTank.mode() == WormTank::BattleMode)
+    {
+        msg = "The battle has been won by ";
+        msg += m_wormTank.battleWinner();
+    } else
+    {
+        msg = "The arena has been won by ";
+        msg += m_wormTank.arenaWinner();
+
+    }
     setFinishedText(msg);
     setFinishedTextVisible(true);
     setStatusText(msg);
@@ -191,6 +202,20 @@ void WormTankModelView::leagueEnded()
     setFinishedTextVisible(true);
 }
 
+
+/**
+* @brief Start arena where all worms compete against each other
+*/
+void WormTankModelView::startArena()
+{
+    disconnectTankSignals();
+    m_wormTank.save(); // save current
+    m_wormTank.startArena();
+    m_battleEndConnection = QObject::connect(&m_wormTank, SIGNAL(matchEnded()), this, SLOT(battleEnded()));
+    setStatusText(m_wormTank.name());
+    startRun();
+}
+
 /**
  * @brief Start a new run of a tank
  */
@@ -212,6 +237,7 @@ void WormTankModelView::disconnectTankSignals()
     switch(m_wormTank.mode())
     {
     case WormTank::BattleMode:
+    case WormTank::ArenaMode:
         QObject::disconnect(m_battleEndConnection);
         break;
     case WormTank::LeagueMode:
@@ -285,6 +311,27 @@ void WormTankModelView::startLast()
             }
             break;
 
+        case WormTank::ArenaMode:
+            if (m_wormTank.loadArena())
+            {
+                if (m_wormTank.arenaWon())
+                {
+                    // Use a timer to reshow the battle ended message to allow ui
+                    // to be setup
+                    QTimer::singleShot(200,this, SLOT(battleEnded()));
+                } else
+                {
+                    setStatusText("Continuing " + m_wormTank.name());
+                    QObject::connect(&m_wormTank, SIGNAL(matchEnded()), this, SLOT(battleEnded()));
+                }
+                startRun();
+            } else
+            {
+                setStatusText("Unable to load arena");
+                throw "Unable to load arena";
+            }
+            break;
+
 
         }
     } catch(...)
@@ -308,6 +355,8 @@ void WormTankModelView::exiting()
         settings.setValue("StartType", m_wormTank.name());
     }
     settings.setValue("Mode", int (m_wormTank.mode()));
+
+    qApp->quit();
 }
 
 /**
@@ -383,7 +432,7 @@ void WormTankModelView::updateWormList()
         if (insPos == m_wormList->size())
         {
             m_wormList->append(new WormCount(fullName, colour));
-            resetList == true;
+            resetList = true;
         } else if (wormCount->name() == fullName && wormCount->colourIndex() == colour)
 		{
             wormCount->incCount();
@@ -445,4 +494,23 @@ void WormTankModelView::viewLeague()
         m_leagueView->setResizeMode(QQuickView::SizeRootObjectToView);
     }
     m_leagueView->show();
+}
+
+/**
+ * @brief View the History of the current worm type
+ */
+void WormTankModelView::viewHistory()
+{
+    if (!m_historyView)
+    {
+        m_historyView = new QQuickView();
+        m_historyView->setSource(QUrl("qrc:/HistoryView.qml"));
+        QQmlContext *ctx = m_historyView->rootContext();
+        ctx->setContextProperty("wormTankModelView", this);
+        ctx->setContextProperty("wormTank", &m_wormTank);
+
+        m_historyView->setTitle("WormTank - History");
+        m_historyView->setResizeMode(QQuickView::SizeRootObjectToView);
+    }
+    m_historyView->show();
 }
