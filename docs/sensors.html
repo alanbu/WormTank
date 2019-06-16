@@ -1,0 +1,43 @@
+<html>
+<head><title>Worm Tank - Sensors</title></head>
+<body>
+<h1>Worm Tank - Sensors</h1>
+
+<p>The sensors are what the worms use to detect what is around them
+in the worm tank.</p>
+<p>The "senses" of the worm is split into three sections, ahead, +/-45
+degrees, left, -45 to - 135 degrees and right, +45 to +135 degrees.
+An extra 4th sensor is set if there is nothing ahead, left or right.</p>
+<p>The sensors are made up of two parts. What the object they can detect
+is: <b>food</b>, <b>wall</b> or <b>other worms</b> and how they can detect
+them:
+<table>
+<tr>
+   <td><b>Seen</b></td>
+   <td>One or more objects are in the section</td>
+</tr>
+<tr>
+   <td><b>Next To</b></td>
+   <td>The next move in that direction will move on to an object</td>
+</tr>
+<tr>
+   <td><b>Range</b></td>
+   <td>There is one or more object within the given range. 
+       This sensor can be given multiple ranges in which case the object is marked as
+       seen in the closest range it appears in and not the further away ones.
+   </td>
+</tr>
+<tr>
+   <td><b>Count</b></td>
+   <td>A count of the objects with the given range.
+       This sensor can be given multiple ranges in which case the object is counted
+       in the closest range it appears in and not the further away ones.    
+   </td>
+</tr>
+</table>
+<p>The sensors are referred to in other pages by contatenating the object
+they are looking for with how they can detect them and the range (if applicable).</p>
+<p>e.g. FoodSeen is a sensor to detect food in any direction. WormRange10 is a
+sensor that detects Worms within a range of 10.</p>
+</body>
+</html>

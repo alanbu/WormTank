@@ -1,0 +1,63 @@
+<html>
+<head><title>Worm Tank - Brains</title></head>
+<body>
+<h1>Worm Tank - Brains</h1>
+<p>The brain is what controls the worms. The worms type is identical to the brains name.</p>
+<p>For each step in the simulation the brain is asked what move to make, and it's response
+is then actioned upon, leading to a move, move and eat food or a collision with another
+worm or a wall.</p>
+<p>After each generation of the simulation multiple child worms are created that
+are given a new brain of the same type but with random parts changed.</p>
+<p>Most brains work on applying weight to the inputs and adding them together
+to decide if the worm should turn left or right. At the end of a generation a
+random selection of the weight are adjusted by a random amount to produce
+the new children.</p>
+<p>Brains are usually named after the <a href="sensors.html">sensors</a> they
+used.</p>
+<p>New brains can be easily added to the C++ code (<a href="newbrain">see below</a>).</p>
+<p>The following table list the brains in the first release. Further brains may have
+been added since then.</p>
+<table>
+<tr>
+   <td><b>FoodSeen</b></td>
+   <td>Uses the FoodSeen sensor</td>
+</tr>
+<tr>
+   <td><b>Random</b></td>
+   <td>This is a special brain type that just uses the random number generator
+       to determine the direction it should go. It never evolves.
+   </td>
+</tr>
+<tr>
+   <td><b>Mutant</b></td>
+   <td>Uses a random selection of sensors. In a new generation as well as the
+       weights being randomly changed, there is a 10% chance of it gaining a
+       new sensor or losing an existing one.
+       The full name of a Mutant worm is appended with the sensor types it has.
+   </td>
+</tr>
+<tr>
+   <td><b>FoodMemory</b></td>
+   <td>Uses the FoodSeen and Food, Worm and Wall NextTo sensors.
+       It remembers up to 40 sets of it's inputs and randomly assigns a turn to each.
+       During a generation makes a note of up to 5 new memories, these do not effect
+       it during the current generation, but may be passed on to it's children. At the
+       end of the generation children can randomly adjust the turns for the current
+       memories, loose some memories, or add some of the new memories gained in this
+       generation.
+   </td>
+</tr>
+<tr>
+   <td><b></b></td>
+   <td></td>
+</tr>
+<tr>
+   <td><b></b></td>
+   <td></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

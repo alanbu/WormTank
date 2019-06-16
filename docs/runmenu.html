@@ -1,0 +1,61 @@
+<html>
+<head><title>Worm Tank - Run Menu</title></head>
+<body>
+<h1>Worm Tank - Run Menu</h1>
+<p>The Run Menu qives options to change the currenty running simulation. The options are:</p>
+<table>
+<tr>
+   <td><a href="#train">Train</a></td>
+   <td>Select a worm type and start it training</td>
+</tr>
+<tr>
+   <td><a href="#battle">Battle</a></td>
+   <td>Select two worm types to compete</td>
+</tr>
+</table>
+
+<h2 id="train">Train</h2>
+
+<p>A window is shown allowing you to choose a worm type to train.</p>
+<p>Pressing <b>OK</b> saves the current tank
+and loads the latest generation of the given worm type.</p>
+<p>If the <b>Reset</b> check box is set the worm type is returned
+to the first generation.</p>
+
+<p>In training mode 100 worms are created for the first generation
+and then the simulation run to update the worms positions
+and health.</p>
+
+<p>When the number of worms reduces to 10 a new generation is started.</p>
+
+<p>The new generation consists of the 10 survivors from the previous
+generation and then 90 new children randomly created based on the 10
+survivors.</p>
+
+<p>The worm that had the most energy at the end of the generation is
+designated the leader. The leader is given more children than the others
+including some based by averaging or mixing it with the rest of the
+top ten.</p>
+
+
+<h2 id="battle">Battle</h2>
+
+<p>A window is shown allowing you to choose two worm types to battle
+against each other.</p>
+<p>Pressing <b>OK</b> saves the current tank
+and loads the latest generation of the two worm types to battle.</p>
+<p>The <b>First generation</b> check box means the two sides are
+generated randomly rather than using the latest generation.</p>
+
+<p>In battle mode 10 of each type of worm are created and the
+simulation run to update the worms positions and health.</p>
+
+<p>The battle is won when there is only one type of worm left
+in the tank.<p>
+<p>When the battle is won a message is shown displaying the results
+and the last worms are left wandering around behind the message.<p>
+<p>Select an option from the Run menu to leave the battle and do
+something else.</p>
+
+</body>
+</html>

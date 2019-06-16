@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>MainForm.ui.qml</file>
+        <file>StartTank.qml</file>
+        <file>StartTankForm.ui.qml</file>
+        <file>WormList.qml</file>
+        <file>Battle.qml</file>
+        <file>BattleForm.ui.qml</file>
+        <file>LeagueView.qml</file>
+    </qresource>
+</RCC>
