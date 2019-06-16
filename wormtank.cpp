@@ -878,15 +878,11 @@ void WormTank::step()
                 }
             } else
             {
-                // Collisions with another worm cost an extra unit of energy
+                // Collistions cost an extra unit of energy
                 worm->useEnergy();
             }
-        } else
-        {
-           // Collisions with the walls cost two extra energy
-            worm->useEnergy();
-            worm->useEnergy();
-        }
+
+		}
 		worm->useEnergy();
         while (worm->getPointToErase(pt))
         {
