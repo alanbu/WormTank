@@ -3,6 +3,7 @@
 #include "direction.h"
 #include "league.h"
 #include <cstdlib>
+#include <cmath>
 #include <algorithm>
 #include <QDir>
 #include <QFile>
